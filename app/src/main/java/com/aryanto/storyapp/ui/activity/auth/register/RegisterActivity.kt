@@ -2,6 +2,7 @@ package com.aryanto.storyapp.ui.activity.auth.register
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Message
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -11,9 +12,12 @@ import androidx.core.view.WindowInsetsCompat
 import com.aryanto.storyapp.R
 import com.aryanto.storyapp.databinding.ActivityRegisterBinding
 import com.aryanto.storyapp.ui.activity.auth.login.LoginActivity
+import com.aryanto.storyapp.ui.utils.ClientState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
+    private val registerVM: RegisterVM by viewModel<RegisterVM>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -26,57 +30,70 @@ class RegisterActivity : AppCompatActivity() {
             insets
         }
 
+        setView()
         setRegisterBtn()
         setPageLogin()
 
     }
 
-    private fun setRegisterBtn() {
+    private fun setView() {
         binding.apply {
-            btnSubmitRegister.setOnClickListener {
-                if (validateInput()) {
-                    showLoading(true)
-                    performRegister()
+            registerVM.register.observe(this@RegisterActivity) { resources ->
+                when (resources) {
+                    is ClientState.Success -> {
+                        progressBarRegister.visibility = View.GONE
+                        handleSuccess()
+                    }
+
+                    is ClientState.Error -> {
+                        progressBarRegister.visibility = View.GONE
+                        handleError(resources.message)
+                    }
+
+                    is ClientState.Loading -> {
+                        progressBarRegister.visibility = View.VISIBLE
+                    }
                 }
             }
         }
     }
 
-    private fun validateInput(): Boolean {
+    private fun handleSuccess() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun handleError(errorMSG: String?) {
         binding.apply {
-            var isValid = true
+            when {
+                errorMSG?.contains("name") == true -> {
+                    nameTiLayout.error = errorMSG
+                }
 
-            if (nameEdtRegister.text.isNullOrEmpty()) {
-                nameTiLayout.error = "Nama tidak boleh kosong"
-                isValid = false
-            } else {
-                nameTiLayout.error = null
+                errorMSG?.contains("email") == true -> {
+                    emailTiLayout.error = errorMSG
+                }
+
+                errorMSG?.contains("password") == true -> {
+                    passwordTiLayout.error = errorMSG
+                }
+
+                else ->{
+                    showToast("$errorMSG")
+                }
             }
-
-            if (emailEdtRegister.text.isNullOrEmpty()) {
-                emailTiLayout.error = "Email tidak boleh kosong"
-                isValid = false
-            } else {
-                emailTiLayout.error = null
-            }
-
-            if (passwordEdtRegister.text.isNullOrEmpty()) {
-                passwordTiLayout.error = "Password tidak boleh kosong"
-                isValid = false
-            } else {
-                passwordTiLayout.error = null
-            }
-
-            return isValid
         }
     }
 
-    private fun performRegister() {
+    private fun setRegisterBtn() {
         binding.apply {
-            btnSubmitRegister.postDelayed({
-                showLoading(false)
-                Toast.makeText(this@RegisterActivity, "Register berhasil", Toast.LENGTH_SHORT).show()
-            }, 2000)
+            btnSubmitRegister.setOnClickListener {
+                val name = nameEdtRegister.text.toString()
+                val email = emailEdtRegister.text.toString()
+                val pass = passwordEdtRegister.text.toString()
+                registerVM.performRegister(name, email, pass)
+            }
         }
     }
 
@@ -90,10 +107,8 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading(isVisible: Boolean) {
-        binding.apply {
-            progressBarRegister.visibility = if (isVisible) View.VISIBLE else View.GONE
-        }
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
 }

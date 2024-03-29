@@ -11,9 +11,15 @@ import androidx.core.view.WindowInsetsCompat
 import com.aryanto.storyapp.R
 import com.aryanto.storyapp.databinding.ActivityLoginBinding
 import com.aryanto.storyapp.ui.activity.auth.register.RegisterActivity
+import com.aryanto.storyapp.ui.activity.home.HomeActivity
+import com.aryanto.storyapp.ui.core.data.model.LoginResult
+import com.aryanto.storyapp.ui.utils.ClientState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+    private val loginVM: LoginVM by viewModel<LoginVM>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -26,18 +32,65 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        setView()
         setLoginBtn()
         setPageRegister()
 
     }
 
+    private fun setView() {
+        binding.apply {
+            loginVM.loginResult.observe(this@LoginActivity) { resources ->
+                when (resources) {
+                    is ClientState.Success -> {
+                        progressBarLogin.visibility = View.GONE
+                        resources.data?.let { handleLoginSuccess(it) }
+                    }
+
+                    is ClientState.Error -> {
+                        handleError(resources.message)
+                        progressBarLogin.visibility = View.GONE
+                    }
+
+                    is ClientState.Loading -> {
+                        progressBarLogin.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleError(errorMSG: String?) {
+        binding.apply {
+            when {
+                errorMSG?.contains("email") == true -> {
+                    emailTiLayout.error = errorMSG
+                }
+
+                errorMSG?.contains("password") == true -> {
+                    passwordTiLayout.error = errorMSG
+                }
+
+                else ->{
+                    showToast("$errorMSG")
+                }
+            }
+        }
+    }
+
+    private fun handleLoginSuccess(loginResult: LoginResult) {
+        val auth = loginResult.token
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun setLoginBtn() {
         binding.apply {
             btnSubmitLogin.setOnClickListener {
-                if (validateInput()) {
-                    showLoading(true)
-                    performLogin()
-                }
+                val email = emailEdtLogin.text.toString()
+                val pass = passwordEdtLogin.text.toString()
+                loginVM.performLogin(email, pass)
             }
         }
     }
@@ -52,42 +105,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateInput(): Boolean {
-        binding.apply {
-            var isValid = true
-
-            if (emailEdtLogin.text.isNullOrEmpty()) {
-                emailTiLayout.error = "Email tidak boleh kosong!"
-                isValid = false
-            } else {
-                emailTiLayout.error = null
-            }
-
-            if (passwordEdtLogin.text.isNullOrEmpty()) {
-                passwordTiLayout.error = "Password tidak boleh kosong!"
-                isValid = false
-            } else {
-                passwordTiLayout.error = null
-            }
-            return isValid
-        }
+    private fun showToast(msg: String){
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
-    private fun performLogin() {
-        binding.apply {
-            btnSubmitLogin.postDelayed({
-                showLoading(false)
-                Toast.makeText(this@LoginActivity, "Login berhasil", Toast.LENGTH_SHORT).show()
-//        val intent = Intent(this, HomeActivity::class.java)
-//        startActivity(intent)
-            }, 2000)
-        }
-    }
-
-    private fun showLoading(isVisible: Boolean) {
-        binding.apply {
-            progressBarLogin.visibility = if (isVisible) View.VISIBLE else View.GONE
-        }
-    }
 
 }

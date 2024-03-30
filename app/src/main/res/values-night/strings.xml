@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="logo_image_login">Logo image login</string>
-    <string name="sudah_siap_untuk_berbagi_cerita">Sudah siap untuk berbagi cerita?</string>
-    <string name="masukan_dulu_datamu_ya">Masukan dulu datamu ya</string>
+    <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="belum_punya_akun">Belum punya akun?</string>
-    <string name="daftar">Daftar</string>
-    <string name="logo_image_register">Logo image register</string>
     <string name="register">Register</string>
-    <string name="lengkapi_data_dirimu_di_bawah_ini">Lengkapi data dirimu di bawah ini</string>
     <string name="masuk">Masuk</string>
-    <string name="name">Name</string>
+    <string name="daftar">Daftar</string>
+
+
+    <string name="posted_by">Posted by</string>
+    <string name="belum_punya_akun">Belum punya akun?</string>
     <string name="sudah_punya_akun">Sudah punya akun?</string>
+    <string name="masukan_dulu_datamu_ya">Masukan dulu datamu ya</string>
+    <string name="sudah_siap_untuk_berbagi_cerita">Sudah siap untuk berbagi cerita?</string>
+    <string name="lengkapi_data_dirimu_di_bawah_ini">Lengkapi data dirimu di bawah ini</string>
+
+
+    <string name="logo_image_login">Logo image login</string>
+    <string name="logo_image_register">Logo image register</string>
+    <string name="logo_image_item">Logo image item</string>
+    <string name="overview">Overview</string>
+    <string name="description">Description</string>
+    <string name="created_at">Created at</string>
+    <string name="keluar">Keluar</string>
 </resources>

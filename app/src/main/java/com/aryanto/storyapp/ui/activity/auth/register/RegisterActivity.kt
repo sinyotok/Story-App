@@ -2,7 +2,6 @@ package com.aryanto.storyapp.ui.activity.auth.register
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Message
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -79,7 +78,7 @@ class RegisterActivity : AppCompatActivity() {
                     passwordTiLayout.error = errorMSG
                 }
 
-                else ->{
+                else -> {
                     showToast("$errorMSG")
                 }
             }

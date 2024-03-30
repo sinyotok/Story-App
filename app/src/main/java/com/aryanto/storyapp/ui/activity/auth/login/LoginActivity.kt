@@ -8,12 +8,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.aryanto.storyapp.R
 import com.aryanto.storyapp.databinding.ActivityLoginBinding
 import com.aryanto.storyapp.ui.activity.auth.register.RegisterActivity
 import com.aryanto.storyapp.ui.activity.home.HomeActivity
 import com.aryanto.storyapp.ui.core.data.model.LoginResult
 import com.aryanto.storyapp.ui.utils.ClientState
+import com.aryanto.storyapp.ui.utils.TokenManager
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -32,10 +35,38 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        setView()
         setLoginBtn()
+        setView()
         setPageRegister()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkSession()
+    }
+
+    private fun checkSession() {
+        lifecycleScope.launch {
+            val tokenManager = TokenManager.getInstance(this@LoginActivity)
+            val (_, session) = tokenManager.getTokenAndSession()
+            if (session == true) {
+                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+        }
+    }
+
+    private fun setLoginBtn() {
+        binding.apply {
+            btnSubmitLogin.setOnClickListener {
+                val email = emailEdtLogin.text.toString()
+                val pass = passwordEdtLogin.text.toString()
+                loginVM.performLogin(email, pass)
+            }
+        }
     }
 
     private fun setView() {
@@ -60,6 +91,24 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleLoginSuccess(loginResult: LoginResult) {
+        lifecycleScope.launch {
+            val auth = loginResult.token
+            val tokenManager = TokenManager.getInstance(this@LoginActivity)
+            tokenManager.saveTokenAndSession(auth, true)
+
+            val (token, session) = tokenManager.getTokenAndSession()
+            if (token != null && session == true){
+                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                showToast("Session has expired")
+            }
+
+        }
+    }
+
     private fun handleError(errorMSG: String?) {
         binding.apply {
             when {
@@ -71,26 +120,9 @@ class LoginActivity : AppCompatActivity() {
                     passwordTiLayout.error = errorMSG
                 }
 
-                else ->{
+                else -> {
                     showToast("$errorMSG")
                 }
-            }
-        }
-    }
-
-    private fun handleLoginSuccess(loginResult: LoginResult) {
-        val auth = loginResult.token
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun setLoginBtn() {
-        binding.apply {
-            btnSubmitLogin.setOnClickListener {
-                val email = emailEdtLogin.text.toString()
-                val pass = passwordEdtLogin.text.toString()
-                loginVM.performLogin(email, pass)
             }
         }
     }
@@ -105,7 +137,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun showToast(msg: String){
+    private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 

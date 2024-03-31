@@ -27,59 +27,23 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/name_ti_layout"
+    <com.aryanto.storyapp.ui.custom_view.NameEdt
+        android:id="@+id/name_edt_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/name"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp">
+        android:layout_marginTop="15dp"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name_edt_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/account_box_24"
-            android:drawablePadding="14sp"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_ti_layout"
+    <com.aryanto.storyapp.ui.custom_view.EmailEdt
+        android:id="@+id/email_edt_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp">
+        android:layout_marginTop="20dp"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email_edt_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/email_24"
-            android:drawablePadding="14sp"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_ti_layout"
+    <com.aryanto.storyapp.ui.custom_view.PasswordEdt
+        android:id="@+id/password_edt_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password_edt_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/lock_24"
-            android:drawablePadding="14sp"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_marginTop="20dp"/>
 
     <Button
         android:id="@+id/btn_submit_register"

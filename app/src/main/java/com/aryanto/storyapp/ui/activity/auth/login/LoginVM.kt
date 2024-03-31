@@ -45,9 +45,9 @@ class LoginVM(
     }
 
     private fun handleHttpException(he: HttpException) {
-        val errorBody = he.response()?.errorBody()?.string()
+        val jsonString = he.response()?.errorBody()?.string()
         try {
-            val errorResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
+            val errorResponse = Gson().fromJson(jsonString, LoginResponse::class.java)
             val errorMSG = errorResponse?.message ?: "Unknown error"
             _loginResult.postValue(ClientState.Error(errorMSG))
         } catch (e: Exception) {

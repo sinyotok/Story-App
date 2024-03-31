@@ -67,20 +67,21 @@ class RegisterActivity : AppCompatActivity() {
         binding.apply {
             when {
                 errorMSG?.contains("name") == true -> {
-                    nameTiLayout.error = errorMSG
+                    nameEdtRegister.setNameError(errorMSG)
                 }
 
                 errorMSG?.contains("email") == true -> {
-                    emailTiLayout.error = errorMSG
+                    emailEdtRegister.setEmailError(errorMSG)
                 }
 
                 errorMSG?.contains("password") == true -> {
-                    passwordTiLayout.error = errorMSG
+                    passwordEdtRegister.setPassError(errorMSG)
                 }
 
                 else -> {
                     showToast("$errorMSG")
                 }
+
             }
         }
     }
@@ -88,9 +89,9 @@ class RegisterActivity : AppCompatActivity() {
     private fun setRegisterBtn() {
         binding.apply {
             btnSubmitRegister.setOnClickListener {
-                val name = nameEdtRegister.text.toString()
-                val email = emailEdtRegister.text.toString()
-                val pass = passwordEdtRegister.text.toString()
+                val name = nameEdtRegister.getName()
+                val email = emailEdtRegister.getEmail()
+                val pass = passwordEdtRegister.getPass()
                 registerVM.performRegister(name, email, pass)
             }
         }

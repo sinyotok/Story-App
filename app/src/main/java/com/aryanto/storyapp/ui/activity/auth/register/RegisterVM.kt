@@ -24,7 +24,7 @@ class RegisterVM(
                 _register.postValue(ClientState.Loading())
                 val response = apiService.register(name, email, pass)
 
-                if (response.error){
+                if (response.error) {
                     _register.postValue(ClientState.Error(response.message))
                 } else {
                     _register.postValue(ClientState.Success(response))
@@ -43,9 +43,9 @@ class RegisterVM(
     }
 
     private fun handleHttpException(he: HttpException) {
-        val errorBody = he.response()?.errorBody()?.string()
+        val jsonString = he.response()?.errorBody()?.string()
         try {
-            val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
+            val errorResponse = Gson().fromJson(jsonString, RegisterResponse::class.java)
             val errorMSG = errorResponse?.message ?: "Unknown error"
             _register.postValue(ClientState.Error(errorMSG))
         } catch (e: Exception) {

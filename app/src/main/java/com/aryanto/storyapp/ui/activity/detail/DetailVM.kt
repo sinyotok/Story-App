@@ -45,9 +45,9 @@ class DetailVM(
     }
 
     private fun handleHttpException(he: HttpException) {
-        val errorBody = he.response()?.errorBody()?.string()
+        val jsonString = he.response()?.errorBody()?.string()
         try {
-            val errorResponse = Gson().fromJson(errorBody, DetailResponse::class.java)
+            val errorResponse = Gson().fromJson(jsonString, DetailResponse::class.java)
             val errorMSG = errorResponse?.message ?: "Unknown error"
             _detail.postValue(ClientState.Error(errorMSG))
         } catch (e: Exception) {

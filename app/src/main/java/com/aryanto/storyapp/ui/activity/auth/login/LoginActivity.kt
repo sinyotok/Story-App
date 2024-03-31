@@ -64,8 +64,8 @@ class LoginActivity : AppCompatActivity() {
     private fun setLoginBtn() {
         binding.apply {
             btnSubmitLogin.setOnClickListener {
-                val email = emailEdtLogin.text.toString()
-                val pass = passwordEdtLogin.text.toString()
+                val email = emailEdtLogin.getEmail().toString()
+                val pass = passwordEdtLogin.getPass().toString()
                 loginVM.performLogin(email, pass)
             }
         }
@@ -116,11 +116,11 @@ class LoginActivity : AppCompatActivity() {
         binding.apply {
             when {
                 errorMSG?.contains("email") == true -> {
-                    emailTiLayout.error = errorMSG
+                    emailEdtLogin.setEmailError(errorMSG)
                 }
 
                 errorMSG?.contains("password") == true -> {
-                    passwordTiLayout.error = errorMSG
+                    passwordEdtLogin.setPassError(errorMSG)
                 }
 
                 else -> {

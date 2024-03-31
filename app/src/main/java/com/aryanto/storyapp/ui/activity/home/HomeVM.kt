@@ -45,9 +45,9 @@ class HomeVM(
     }
 
     private fun handleHttpException(he: HttpException) {
-        val errorBody = he.response()?.errorBody()?.string()
+        val jsonString = he.response()?.errorBody()?.string()
         try {
-            val errorResponse = Gson().fromJson(errorBody, StoryResponse::class.java)
+            val errorResponse = Gson().fromJson(jsonString, StoryResponse::class.java)
             val errorMSG = errorResponse?.message ?: "Unknown error"
             _stories.postValue(ClientState.Error(errorMSG))
         } catch (e: Exception) {

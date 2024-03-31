@@ -1,4 +1,4 @@
-package com.aryanto.storyapp.ui.activity.home
+package com.aryanto.storyapp.ui.activity.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,30 +6,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aryanto.storyapp.ui.core.data.model.Story
 import com.aryanto.storyapp.ui.core.data.remote.network.ApiService
-import com.aryanto.storyapp.ui.core.data.remote.reponse.StoryResponse
+import com.aryanto.storyapp.ui.core.data.remote.reponse.DetailResponse
 import com.aryanto.storyapp.ui.utils.ClientState
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class HomeVM(
+class DetailVM(
     private val apiService: ApiService
 ) : ViewModel() {
 
-    private val _stories = MutableLiveData<ClientState<List<Story>>>()
-    val stories: LiveData<ClientState<List<Story>>> = _stories
+    private val _detail = MutableLiveData<ClientState<Story>>()
+    val detail: LiveData<ClientState<Story>> = _detail
 
-    fun getStories() {
+    fun detail(storyId: String) {
         viewModelScope.launch {
             try {
-                _stories.postValue(ClientState.Loading())
-                val response = apiService.getStories(page = 1, size = 50, location = null)
+                _detail.postValue(ClientState.Loading())
+                val response = apiService.getDetail(storyId)
 
                 if (response.error) {
-                    _stories.postValue(ClientState.Error(response.message))
+                    _detail.postValue(ClientState.Error(response.message))
                 } else {
-                    _stories.postValue(ClientState.Success(response.listStory))
+                    _detail.postValue(ClientState.Success(response.story))
                 }
 
             } catch (he: HttpException) {
@@ -39,7 +39,7 @@ class HomeVM(
                     is IOException -> "${e.message}"
                     else -> "Unknown error: ${e.message}"
                 }
-                _stories.postValue(ClientState.Error(errorMSG))
+                _detail.postValue(ClientState.Error(errorMSG))
             }
         }
     }
@@ -47,14 +47,13 @@ class HomeVM(
     private fun handleHttpException(he: HttpException) {
         val errorBody = he.response()?.errorBody()?.string()
         try {
-            val errorResponse = Gson().fromJson(errorBody, StoryResponse::class.java)
+            val errorResponse = Gson().fromJson(errorBody, DetailResponse::class.java)
             val errorMSG = errorResponse?.message ?: "Unknown error"
-            _stories.postValue(ClientState.Error(errorMSG))
+            _detail.postValue(ClientState.Error(errorMSG))
         } catch (e: Exception) {
-            _stories.postValue(ClientState.Error("Error when parsing response msg", null))
+            _detail.postValue(ClientState.Error("Error when parsing response msg", null))
         }
 
     }
-
 
 }

@@ -14,6 +14,7 @@ import com.aryanto.storyapp.databinding.ActivityLoginBinding
 import com.aryanto.storyapp.ui.activity.auth.register.RegisterActivity
 import com.aryanto.storyapp.ui.activity.home.HomeActivity
 import com.aryanto.storyapp.ui.core.data.model.LoginResult
+import com.aryanto.storyapp.ui.core.data.remote.network.ApiClient
 import com.aryanto.storyapp.ui.utils.ClientState
 import com.aryanto.storyapp.ui.utils.TokenManager
 import kotlinx.coroutines.launch
@@ -49,8 +50,9 @@ class LoginActivity : AppCompatActivity() {
     private fun checkSession() {
         lifecycleScope.launch {
             val tokenManager = TokenManager.getInstance(this@LoginActivity)
-            val (_, session) = tokenManager.getTokenAndSession()
-            if (session == true) {
+            val (token, session) = tokenManager.getTokenAndSession()
+            if (token != null && session == true) {
+                ApiClient.setAuthToken(token)
                 val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
@@ -95,10 +97,11 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val auth = loginResult.token
             val tokenManager = TokenManager.getInstance(this@LoginActivity)
+
             tokenManager.saveTokenAndSession(auth, true)
 
-            val (token, session) = tokenManager.getTokenAndSession()
-            if (token != null && session == true){
+            val (token) = tokenManager.getTokenAndSession()
+            if (token != null) {
                 val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                 startActivity(intent)
                 finish()

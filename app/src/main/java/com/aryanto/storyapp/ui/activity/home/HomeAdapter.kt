@@ -1,19 +1,20 @@
 package com.aryanto.storyapp.ui.activity.home
 
-import android.util.Log
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.aryanto.storyapp.databinding.ItemBinding
+import com.aryanto.storyapp.ui.activity.detail.DetailActivity
 import com.aryanto.storyapp.ui.core.data.model.Story
 import com.bumptech.glide.Glide
 
 class HomeAdapter(
     private var items: List<Story>
-): RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
-    class HomeViewHolder(private val binding: ItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: Story){
+) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+    class HomeViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(user: Story) {
             binding.apply {
 
                 nameItem.text = user.name
@@ -25,7 +26,9 @@ class HomeAdapter(
                     .into(imageItem)
 
                 root.setOnClickListener {
-                    Log.d("User clicked", "$user")
+                    val intent = Intent(root.context, DetailActivity::class.java)
+                    intent.putExtra("user", user)
+                    root.context.startActivity(intent)
                 }
             }
         }
@@ -44,15 +47,15 @@ class HomeAdapter(
         holder.bind(items[position])
     }
 
-    fun updateItem(newList: List<Story>){
+    fun updateItem(newList: List<Story>) {
         val diffResult = DiffUtil.calculateDiff(myDiffCB(items, newList))
         items = newList
         diffResult.dispatchUpdatesTo(this)
     }
 
-    companion object{
+    companion object {
         fun myDiffCB(oldList: List<Story>, newList: List<Story>) =
-            object : DiffUtil.Callback(){
+            object : DiffUtil.Callback() {
                 override fun getOldListSize(): Int {
                     return oldList.size
                 }

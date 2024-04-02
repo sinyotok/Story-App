@@ -1,6 +1,7 @@
 package com.aryanto.storyapp.ui.activity.detail
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -42,6 +43,8 @@ class DetailActivity : AppCompatActivity() {
 
         setView()
 
+        applyTransition()
+
     }
 
     private fun setView() {
@@ -75,6 +78,26 @@ class DetailActivity : AppCompatActivity() {
             Glide.with(this@DetailActivity)
                 .load(detailView.photoUrl)
                 .into(detailImage)
+
+        }
+    }
+
+    private fun applyTransition() {
+        binding.apply {
+            val sharedImage = detailImage
+            val sharedName = detailName
+            val sharedCreated = detailCreatedAt
+            val sharedDesc = detailDescription
+
+            ViewCompat.setTransitionName(sharedImage, "shared_image")
+            ViewCompat.setTransitionName(sharedName, "shared_name")
+            ViewCompat.setTransitionName(sharedCreated, "shared_created")
+            ViewCompat.setTransitionName(sharedDesc, "shared_desc")
+
+            val transition = TransitionInflater.from(this@DetailActivity)
+                .inflateTransition(R.transition.shared_element)
+            window.sharedElementEnterTransition = transition
+            window.sharedElementExitTransition = transition
 
         }
     }

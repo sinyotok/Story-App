@@ -1,8 +1,11 @@
 package com.aryanto.storyapp.ui.activity.home
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.aryanto.storyapp.databinding.ItemBinding
@@ -28,7 +31,18 @@ class HomeAdapter(
                 root.setOnClickListener {
                     val intent = Intent(root.context, DetailActivity::class.java)
                     intent.putExtra("user", user)
-                    root.context.startActivity(intent)
+
+                    val optionCompact: ActivityOptionsCompat =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            root.context as Activity,
+                            Pair(nameItem, "shared_name"),
+                            Pair(imageItem, "shared_image"),
+                            Pair(createdAt, "shared_created"),
+                            Pair(descriptionItem, "shared_desc"),
+                        )
+
+                    root.context.startActivity(intent, optionCompact.toBundle())
+
                 }
             }
         }

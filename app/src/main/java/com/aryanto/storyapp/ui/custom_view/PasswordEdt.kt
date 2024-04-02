@@ -65,7 +65,7 @@ class PasswordEdt : LinearLayout {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty() && s.toString().length < 8) {
-                    tiLayout.error = true.toString()
+                    tiLayout.error = "Password must be at least 8 characters"
                     isValidationError = true
                 } else {
                     clearError()
@@ -76,7 +76,6 @@ class PasswordEdt : LinearLayout {
 
             override fun afterTextChanged(s: Editable?) {
                 validationPassword(s.toString())
-                clearError()
                 updateIconColor()
             }
 

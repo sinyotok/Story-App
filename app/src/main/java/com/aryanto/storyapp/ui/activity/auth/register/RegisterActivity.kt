@@ -29,10 +29,21 @@ class RegisterActivity : AppCompatActivity() {
             insets
         }
 
-        setView()
         setRegisterBtn()
+        setView()
         setPageLogin()
 
+    }
+
+    private fun setRegisterBtn() {
+        binding.apply {
+            btnSubmitRegister.setOnClickListener {
+                val name = nameEdtRegister.getName()
+                val email = emailEdtRegister.getEmail()
+                val pass = passwordEdtRegister.getPass()
+                registerVM.performRegister(name, email, pass)
+            }
+        }
     }
 
     private fun setView() {
@@ -41,7 +52,7 @@ class RegisterActivity : AppCompatActivity() {
                 when (resources) {
                     is ClientState.Success -> {
                         progressBarRegister.visibility = View.GONE
-                        handleSuccess()
+                        resources.data?.let { handleSuccess() }
                     }
 
                     is ClientState.Error -> {
@@ -82,17 +93,6 @@ class RegisterActivity : AppCompatActivity() {
                     showToast("$errorMSG")
                 }
 
-            }
-        }
-    }
-
-    private fun setRegisterBtn() {
-        binding.apply {
-            btnSubmitRegister.setOnClickListener {
-                val name = nameEdtRegister.getName()
-                val email = emailEdtRegister.getEmail()
-                val pass = passwordEdtRegister.getPass()
-                registerVM.performRegister(name, email, pass)
             }
         }
     }

@@ -63,15 +63,16 @@ class EmailEdt : LinearLayout {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!isValidEmail(s.toString())){
-                    tiLayout.error = true.toString()
+                    tiLayout.error = "Email must be valid email"
                     isValidationError = true
                 } else {
                     clearError()
                 }
+                updateIconColor()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                clearError()
+                updateIconColor()
             }
 
         })

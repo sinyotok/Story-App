@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.aryanto.storyapp.R
 import com.aryanto.storyapp.databinding.ActivityHomeBinding
 import com.aryanto.storyapp.ui.activity.auth.login.LoginActivity
+import com.aryanto.storyapp.ui.activity.upload.UploadActivity
 import com.aryanto.storyapp.ui.utils.ClientState
 import com.aryanto.storyapp.ui.utils.TokenManager
 import kotlinx.coroutines.launch
@@ -85,6 +86,14 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+
+            R.id.action_upload -> {
+                val intent = Intent(this, UploadActivity::class.java)
+                startActivity(intent)
+
+                true
+            }
+
             R.id.action_logout -> {
                 lifecycleScope.launch {
                     val tokenManager = TokenManager.getInstance(this@HomeActivity)

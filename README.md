@@ -10,21 +10,21 @@ Course :
 ## Submission Chechlists : 
 
   - [x]  Proses login berhasil dengan benar (Terpenuhi).
-  - [ ]  
+   
   - [x]  Proses register berhasil dengan benar (Terpenuhi).
-  - [ ]  
+  
   - [x]  Membuat Custom View berupa EditText sesuai kriteria (Terpenuhi).
-  - [ ]  
+   
   - [x]  Menyimpan data sesi dan token di preferences (Terpenuhi).
-  - [ ]  
+  
   - [x]  Terdapat fitur untuk logout untuk mengahapus sesi (Terpenuhi).
-  - [ ]  
+    
   - [x]  Menampilkan daftar cerita dari API (Terpenuhi).
-  - [ ]  
+  
   - [x]  Muncul halaman detail ketika salah satu item cerita ditekan (Terpenuhi).
-  - [ ]  
+   
   - [x]  Proses menambah cerita baru berhasil sesuai kriteria (Terpenuhi).
-  - [ ]  
+   
   - [x]  Membuat animasi pada aplikasi (Terpenuhi).
 
 ## Contributing 
